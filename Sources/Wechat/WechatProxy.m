@@ -168,6 +168,10 @@ NSString * const kWechatSceneTypeKey = @"wechat_scene_type_key";
 
 - (void)getWechatUserInfoWithCode:(NSString *)code completed:(DiplomatCompletedBlock)completedBlock
 {
+    if (self.wechatSecret.length == 0) {
+        completedBlock(code, nil);
+        return;
+    }
   [self wechatAuthRequestWithPath:@"oauth2/access_token"
                            params:@{@"appid": self.wechatAppId,
                                     @"secret": self.wechatSecret,
