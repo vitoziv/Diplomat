@@ -7,7 +7,6 @@
 //
 
 #import "WeiboProxy.h"
-#import "WeiboUser.h"
 
 static NSString * const kWeiboTokenKey = @"weibo_token";
 static NSString * const kWeiboUserIdKey = @"weibo_user_id";
@@ -156,29 +155,31 @@ NSString * const kDiplomatTypeWeibo = @"diplomat_weibo";
                        accessToken:(NSString *)token
                          completed:(DiplomatCompletedBlock)completedBlock
 {
-  [WBHttpRequest requestForUserProfile:userId
-                       withAccessToken:token
-                    andOtherProperties:nil
-                                 queue:nil
-                 withCompletionHandler:^(WBHttpRequest *httpRequest,  WeiboUser *user, NSError *error) {
-                   DTUser *dtUser = nil;
-                   if (user.userID)
-                   {
-                     dtUser = [[DTUser alloc] init];
-                     dtUser.uid = user.userID;
-                     dtUser.nick = user.screenName;
-                     dtUser.avatar = user.avatarHDUrl;
-                     dtUser.gender = [user.gender isEqualToString:@"m"] ?  @"male" : @"female";
-                     dtUser.provider = @"weibo";
-                     dtUser.accessToken = token;
-                     dtUser.rawData = user.originParaDict;
-                   }
-
-                   if (completedBlock)
-                   {
-                     completedBlock(dtUser, error);
-                   }
-                 }];
+    completedBlock(@{@"userId": userId, @"accessToken": token}, nil);
+    // TODO: 拉去微博用户信息
+//  [WBHttpRequest requestForUserProfile:userId
+//                       withAccessToken:token
+//                    andOtherProperties:nil
+//                                 queue:nil
+//                 withCompletionHandler:^(WBHttpRequest *httpRequest,  WeiboUser *user, NSError *error) {
+//                   DTUser *dtUser = nil;
+//                   if (user.userID)
+//                   {
+//                     dtUser = [[DTUser alloc] init];
+//                     dtUser.uid = user.userID;
+//                     dtUser.nick = user.screenName;
+//                     dtUser.avatar = user.avatarHDUrl;
+//                     dtUser.gender = [user.gender isEqualToString:@"m"] ?  @"male" : @"female";
+//                     dtUser.provider = @"weibo";
+//                     dtUser.accessToken = token;
+//                     dtUser.rawData = user.originParaDict;
+//                   }
+//
+//                   if (completedBlock)
+//                   {
+//                     completedBlock(dtUser, error);
+//                   }
+//                 }];
 }
 
 @end
